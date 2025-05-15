@@ -1,6 +1,6 @@
 # Noesis Open Shell v1.0.0
 
-`NOS` is a fork of the [fish shell](https://fishshell.com/) that provides all the features you love about fish while allowing for innovation and experimentation beyond the original codebase.
+NOS is a fork of the [fish shell](https://fishshell.com/) that provides all the features you love about fish while allowing for innovation and experimentation beyond the original codebase.
 
 > **Dependency Risk Mitigation**: Nos is designed to maintain compatibility with fish while reducing the dependency risk if fish development were to slow down or stop. Our dual extension system allows for independent evolution while preserving interoperability.
 
