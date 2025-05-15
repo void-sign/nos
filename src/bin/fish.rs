@@ -143,37 +143,60 @@ fn print_rusage_self() {
 // Source the file config.fish in the given directory.
 // Returns true if successful, false if not.
 fn source_config_in_directory(parser: &Parser, dir: &wstr) -> bool {
-    // If the config.fish file doesn't exist or isn't readable silently return. Fish versions up
-    // thru 2.2.0 would instead try to source the file with stderr redirected to /dev/null to deal
-    // with that possibility.
-    //
-    // This introduces a race condition since the readability of the file can change between this
-    // test and the execution of the 'source' command. However, that is not a security problem in
-    // this context so we ignore it.
-    let config_pathname = dir.to_owned() + L!("/config.fish");
-    let escaped_pathname = escape(dir) + L!("/config.fish");
-    if waccess(&config_pathname, libc::R_OK) != 0 {
+    // Check for both config.fish and nos_config.nos files
+    // nos_config.nos has higher priority - if both exist, both will be loaded with nos_config.nos last
+    
+    let fish_config_pathname = dir.to_owned() + L!("/config.fish");
+    let nos_config_pathname = dir.to_owned() + L!("/nos_config.nos");
+    let fish_escaped_pathname = escape(dir) + L!("/config.fish");
+    let nos_escaped_pathname = escape(dir) + L!("/nos_config.nos");
+    
+    let mut sourced_something = false;
+    
+    // First try to source config.fish
+    if waccess(&fish_config_pathname, libc::R_OK) == 0 {
+        FLOG!(config, "sourcing", fish_escaped_pathname);
+        
+        let fish_cmd: WString = L!("builtin source ").to_owned() + fish_escaped_pathname.as_utfstr();
+        
+        parser.libdata_mut().within_fish_init = true;
+        let _ = parser.eval(&fish_cmd, &IoChain::new());
+        parser.libdata_mut().within_fish_init = false;
+        sourced_something = true;
+    } else {
         FLOGF!(
             config,
             "not sourcing %ls (not readable or does not exist)",
-            escaped_pathname
+            fish_escaped_pathname
         );
-        return false;
     }
-    FLOG!(config, "sourcing", escaped_pathname);
-
-    let cmd: WString = L!("builtin source ").to_owned() + escaped_pathname.as_utfstr();
-
-    parser.libdata_mut().within_fish_init = true;
-    let _ = parser.eval(&cmd, &IoChain::new());
-    parser.libdata_mut().within_fish_init = false;
-    return true;
+    
+    // Then try to source nos_config.nos
+    if waccess(&nos_config_pathname, libc::R_OK) == 0 {
+        FLOG!(config, "sourcing", nos_escaped_pathname);
+        
+        let nos_cmd: WString = L!("builtin source ").to_owned() + nos_escaped_pathname.as_utfstr();
+        
+        parser.libdata_mut().within_fish_init = true;
+        let _ = parser.eval(&nos_cmd, &IoChain::new());
+        parser.libdata_mut().within_fish_init = false;
+        sourced_something = true;
+    } else {
+        FLOGF!(
+            config,
+            "not sourcing %ls (not readable or does not exist)",
+            nos_escaped_pathname
+        );
+    }
+    
+    return sourced_something;
 }
 
 /// Parse init files. exec_path is the path of fish executable as determined by argv[0].
 fn read_init(parser: &Parser, paths: &ConfigPaths) {
     #[cfg(feature = "embed-data")]
     {
+        // First load config.fish
         let emfile = Asset::get("config.fish").expect("Embedded file not found");
         let src = str2wcstring(&emfile.data);
         parser.libdata_mut().within_fish_init = true;
@@ -182,6 +205,18 @@ fn read_init(parser: &Parser, paths: &ConfigPaths) {
         parser.libdata_mut().within_fish_init = false;
         if let Err(msg) = ret {
             eprintf!("%ls", msg);
+        }
+        
+        // Then try to load nos_config.nos if it exists
+        if let Some(nos_emfile) = Asset::get("nos_config.nos") {
+            let nos_src = str2wcstring(&nos_emfile.data);
+            parser.libdata_mut().within_fish_init = true;
+            let nos_fname: Arc<WString> = Arc::new(L!("embedded:nos_config.nos").into());
+            let nos_ret = parser.eval_file_wstr(nos_src, nos_fname, &IoChain::new(), None);
+            parser.libdata_mut().within_fish_init = false;
+            if let Err(msg) = nos_ret {
+                eprintf!("%ls", msg);
+            }
         }
     }
     #[cfg(not(feature = "embed-data"))]

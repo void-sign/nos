@@ -32,6 +32,25 @@ functions/
 └── git.nos     # Enhanced nos version (takes precedence)
 ```
 
+### Configuration Files
+
+The dual extension system extends to configuration files:
+
+- Both `~/.config/fish/config.fish` and `~/.config/fish/nos_config.nos` are loaded when present
+- The files are loaded in this order:
+  1. System config.fish
+  2. System nos_config.nos
+  3. User config.fish
+  4. User nos_config.nos
+
+This allows nos-specific configuration to override or extend fish configuration without breaking compatibility.
+
+```
+~/.config/fish/
+├── config.fish     # Standard fish configuration
+└── nos_config.nos  # Nos-specific overrides and extensions
+```
+
 ## Why Fork?
 
 This fork allows us to:
