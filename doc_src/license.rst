@@ -8,9 +8,12 @@ License for NOS (Noesis Open Shell)
 
 NOS is a fork of the fish shell.
 
+Copyright © 2005-2009 Axel Liljencrantz, 
+Copyright © 2009-2025 fish-shell contributors. 
+
 Copyright © 2025 Napol Thanarangkaun (Noesis Open Shell)
 
-Copyright © 2005-2009 Axel Liljencrantz, 2009-2025 fish-shell contributors. The Fish Shell is released under the GNU General Public License, version 2.
+The Fish Shell is released under the GNU General Public License, version 2.
 
 NOS includes all components of the fish shell, plus a compatibility layer for supporting both `.fish` and `.nos` file extensions. All components of nos, including the original fish code and the compatibility layer, are licensed under the GNU General Public License, version 2.
 
