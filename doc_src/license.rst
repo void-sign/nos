@@ -3,10 +3,18 @@ License
 
 .. Updates to this file should also be reflected in Cargo.toml, COPYING and debian/copyright
 
-License for fish
-----------------
+License for nos (Noesis Open Shell)
+----------------------------------
 
-``fish`` Copyright © 2005-2009 Axel Liljencrantz, 2009- fish-shell contributors. ``fish`` is released under the GNU General Public License, version 2.
+``nos`` is a fork of the fish shell.
+
+``nos`` Copyright © 2025 Napol Thanarangkaun (Noesis Open Shell)
+
+``fish`` Copyright © 2005-2009 Axel Liljencrantz, 2009-2025 fish-shell contributors. ``fish`` is released under the GNU General Public License, version 2.
+
+``nos`` includes all components of the fish shell, plus a compatibility layer for supporting both `.fish` and `.nos` file extensions. All components of nos, including the original fish code and the compatibility layer, are licensed under the GNU General Public License, version 2.
+
+For details on the dual extension system, see :doc:`nos_extension_system`.
 
 ``fish`` includes other code licensed under the GNU General Public License, version 2, including GNU ``printf``.
 
