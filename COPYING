@@ -24,7 +24,7 @@ nos project, while preserving the integrity of the original .fish files.
 All components, both original and nos-specific, are licensed under the
 compatible terms described above.
 
-Full licensing information is contained in [doc_src/license.rst](https://github.com/void-sign/nos/blob/master/doc_src/license.rst).
+Full licensing information is contained in https://github.com/void-sign/nos/blob/master/doc_src/license.rst
 
 The nos compatibility layer and nos-specific extensions are also licensed under
 the GNU General Public License version 2, maintaining license compatibility
