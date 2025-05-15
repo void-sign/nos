@@ -4,6 +4,7 @@
 use crate::common::wcs2string;
 use crate::common::{escape, ScopeGuard};
 use crate::env::Environment;
+use crate::file_extension_handler::{find_file_with_any_extension, ShellExtension, strip_shell_extension};
 use crate::io::IoChain;
 use crate::parser::Parser;
 #[cfg(test)]
@@ -418,17 +419,10 @@ impl AutoloadFileCache {
         if cmd.as_char_slice()[0] == '\0' {
             return None;
         }
-        // Re-use the storage for path.
-        let mut path;
+        
         for dir in self.dirs() {
-            // Construct the path as dir/cmd.fish
-            path = dir.to_owned();
-            path.push('/');
-            path.push_utfstr(cmd);
-            path.push_str(".fish");
-
-            let file_id = file_id_for_path(&path);
-            if file_id != INVALID_FILE_ID {
+            // Try to find a file with any supported extension (.nos or .fish)
+            if let Some((path, file_id)) = find_file_with_any_extension(dir, cmd) {
                 // Found it.
                 return Some(AutoloadableFile { path, file_id });
             }

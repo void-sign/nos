@@ -321,12 +321,12 @@ pub(crate) fn safe_report_exec_error(
             );
             let mut interpreter_buf = [b'\0'; 128];
             if get_interpreter(actual_cmd, &mut interpreter_buf).is_none() {
-                // Paths ending in ".fish" need to start with a shebang
-                if actual_cmd.to_bytes().ends_with(b".fish") {
+                // Paths ending in ".fish" or ".nos" need to start with a shebang
+                if actual_cmd.to_bytes().ends_with(b".fish") || actual_cmd.to_bytes().ends_with(b".nos") {
                     FLOG_SAFE!(
                         exec,
-                        "fish scripts require an interpreter directive (must \
-                         start with '#!/path/to/fish')."
+                        "nos or fish scripts require an interpreter directive (must \
+                         start with '#!/path/to/nos' or '#!/path/to/fish')."
                     );
                 } else {
                     // If the shebang line exists, we would get an ENOENT or similar instead,

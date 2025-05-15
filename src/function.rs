@@ -245,8 +245,10 @@ pub fn exists_no_autoload(cmd: &wstr) -> bool {
 
     let narrow = crate::common::wcs2string(cmd);
     if let Ok(cmdstr) = std::str::from_utf8(&narrow) {
-        let cmd = "functions/".to_owned() + cmdstr + ".fish";
-        crate::autoload::has_asset(&cmd)
+        // Try with .nos extension first, then fallback to .fish
+        let cmd_nos = "functions/".to_owned() + cmdstr + ".nos";
+        let cmd_fish = "functions/".to_owned() + cmdstr + ".fish";
+        crate::autoload::has_asset(&cmd_nos) || crate::autoload::has_asset(&cmd_fish)
     } else {
         false
     }

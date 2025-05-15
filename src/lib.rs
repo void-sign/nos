@@ -46,6 +46,7 @@ pub mod fallback;
 pub mod fd_monitor;
 pub mod fd_readable_set;
 pub mod fds;
+pub mod file_extension_handler;
 pub mod flog;
 pub mod fork_exec;
 pub mod function;
