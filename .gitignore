@@ -106,3 +106,8 @@ target/
 
 # JetBrains editors.
 .idea/
+
+# VSCode settings - generally ignored but we want our specific settings
+.vscode/*
+!.vscode/settings.json
+!.vscode/.gitkeep
