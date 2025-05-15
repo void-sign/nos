@@ -1,10 +1,7 @@
-License
+License for NOS (Noesis Open Shell)
 ========
 
 .. Updates to this file should also be reflected in Cargo.toml, COPYING and debian/copyright
-
-License for NOS (Noesis Open Shell)
-----------------------------------
 
 NOS is a fork of the fish shell.
 
